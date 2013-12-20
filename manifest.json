@@ -1,0 +1,12 @@
+{
+  "name": "ProtoStack",
+  "description": "IDE with Cloudstack integration",
+  "version": "0.1",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["chrome_app.js"]
+    }
+  },
+  "permissions": [ "https://*/*" ]
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Hello Cloudstack</h1>
+    <form>
+      <fieldset>
+        <legend>Management Server</legend>
+        <label for="key">API Key: </label>
+        <input id="key">
+      
+        <label for="secret">API Secret: </label>
+        <input id="secret">
+      
+        <button id="connect">Connect</button>
+      </fieldset>
+    
+      <fieldset>
+        <legend>Deploy an instance</legend>
+        <label for="templates">Template: </label>
+        <select id="templates"></select>
+
+        <label for="zones">Zone: </label>
+        <select id="zones"></select>
+
+        <label for="services">Service: </label>
+        <select id="services"></select>
+        
+        <button id="deploy">Deploy</button>
+      </fieldset>
+    </form>
+    <script src="module.js"></script>
+    <script src="api.js"></script>
+  </body>
+</html>

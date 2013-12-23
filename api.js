@@ -25,12 +25,14 @@ document.getElementById("connect").addEventListener("click", function() {
     listAvailableOptionsFor(apiClient, "listServiceOfferings", "services", "serviceoffering");
     
     document.getElementById("deploy").addEventListener("click", function() {
-      apiClient.exec("deployVirtualMachine", {
+      var vmOpts = {
         serviceofferingid: document.getElementById("services").value,
         templateid: document.getElementById("templates").value,
         zoneid: document.getElementById("zones").value,
-        networkids: [ document.getElementById("networks").value ]  
-      }, function(err, res) {
+        networkids: [ document.getElementById("networks").value ]
+      };
+      if(document.getElementById("ipaddress").value != "") vmOpts.ipaddress = document.getElementById("ipaddress").value;
+      apiClient.exec("deployVirtualMachine", vmOpts, function(err, res) {
         console.log(err, res);
       });
     });

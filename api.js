@@ -5,10 +5,10 @@ var listAsOptions = function(item) {
 
 var listAsItems = function(item) {
     console.log(item);
-  return "<li>" + item.name + " (" + item.id + ")</option>"; 
+  return "<li>" + item.name + " <a href=\"#\" onclick=\"showInfo(" + item.id + ")\">[INFO]</a></li>"; 
 };
 
-var listAvailableOptionsFor = function(apiClient, jobName, outputElementId, responsePropertyName, params, displayFunc) {
+var listAvailableOptionsFor = function(apiClient, jobName, outputElementId, responsePropertyName, params, displayFunc, responseCallback) {
   apiClient.exec(jobName, params || {}, function(err, res) {
     console.log(err, res);
     if(err) {
@@ -23,18 +23,36 @@ var listAvailableOptionsFor = function(apiClient, jobName, outputElementId, resp
       var item = res[responsePropertyName][i];
       listElem.innerHTML += displayFunc.call(this, item);
     }
+      
+    if(responseCallback) responseCallback(res);
   });
 };
 
 document.getElementById("connect").addEventListener("click", function() {
   connectAPI(document.getElementById("url").value, document.getElementById("key").value, document.getElementById("secret").value, function(apiClient) {
     
+    var vms = [];
+      
     listAvailableOptionsFor(apiClient, "listTemplates", "templates", "template", {templatefilter: "executable"});
     listAvailableOptionsFor(apiClient, "listZones", "zones", "zone");
     listAvailableOptionsFor(apiClient, "listNetworks", "networks", "network");
     listAvailableOptionsFor(apiClient, "listServiceOfferings", "services", "serviceoffering");
-    listAvailableOptionsFor(apiClient, "listVirtualMachines", "vms", "virtualmachine", {}, listAsItems);
-    
+    listAvailableOptionsFor(apiClient, "listVirtualMachines", "vms", "virtualmachine", {}, listAsItems, function(vms) {
+      vms = vms;
+      window.showInfo = function(vmID) {
+        var vmState = null;
+        for(var i=0;i<vms.length;i++) {
+          if(vms[i].id == vmID) {
+            vmState = vms[i];
+            break;
+          }
+        }
+        var content = "<h2>" + vmState.displayName + "</h2>"
+        if(vmState.nic && vmState.nic[0]) content += "<p>IP: " + vmState.nic[0].ipaddress + "</p>";
+        document.getElementById("vmstate").innerHTML = content;
+      }
+    });
+      
     document.getElementById("deploy").addEventListener("click", function() {
       var vmOpts = {
         serviceofferingid: document.getElementById("services").value,

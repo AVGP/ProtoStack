@@ -3,9 +3,9 @@ var process=require("__browserify_process");
 
 var Cloudstack = require("cloudstack");
 console.log("yay");
-window.connectAPI = function(key, secret, callback) {
+window.connectAPI = function(url, key, secret, callback) {
   var client = new Cloudstack({
-    apiUri: "https://api.exoscale.ch/compute",
+    apiUri: url,
     apiKey: key,
     apiSecret: secret
   });
